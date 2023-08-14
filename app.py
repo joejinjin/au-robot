@@ -29,6 +29,7 @@ def token(request: Request):
 @webapp.post("/token")
 async def access(request: Request):
     data = (await request.body()).decode("utf-8")
+    print("user => %s" % data)
     msg = receive.parse_xml(data)
 
     if isinstance(msg, receive.Msg) and msg.MsgType == 'text':
