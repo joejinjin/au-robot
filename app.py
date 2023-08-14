@@ -2,6 +2,8 @@ import uvicorn
 import hashlib
 from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.responses import PlainTextResponse
+import reply
+import receive
 
 # from _chat import *
 # from _resp import *
@@ -24,15 +26,19 @@ def token(request: Request):
     return PlainTextResponse('')
 
 
-# @webapp.post("/chat")
-# async def chat(request: Request, background: BackgroundTasks):
-#     request_body = await request.json()
-#     question = request_body["question"]
-#
-#     messages = [{"role": "user", "content": question}]
-#     result = chat_completion(messages)
-#
-#     return resp_ok(result)
+@webapp.post("/token")
+async def receive(request: Request):
+    data = (await request.body()).decode("utf-8")
+    msg = receive.parse_xml(data)
+
+    if isinstance(msg, receive.Msg) and msg.MsgType == 'text':
+        to_user = msg.FromUserName
+        from_user = msg.ToUserName
+        content = "test"
+        reply_msg = reply.TextMsg(to_user, from_user, content)
+        return reply_msg.send()
+
+    return "success"
 
 
 if __name__ == '__main__':
