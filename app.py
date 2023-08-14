@@ -1,16 +1,16 @@
 import uvicorn
 import hashlib
 from fastapi import FastAPI, Request, BackgroundTasks
-from _chat import *
-from _resp import *
+# from _chat import *
+# from _resp import *
 
 webapp = FastAPI()
-token = 'joeandjin2017'
+weixin = 'joeandjin2017'
 
 
 @webapp.get("/token")
 def token(request: Request):
-    arr = [token, str(request.query_params["timestamp"]), str(request.query_params["nonce"])]
+    arr = [weixin, str(request.query_params["timestamp"]), str(request.query_params["nonce"])]
     arr.sort()
 
     tmp = ''.join(arr)
@@ -22,15 +22,15 @@ def token(request: Request):
     return None
 
 
-@webapp.post("/chat")
-async def chat(request: Request, background: BackgroundTasks):
-    request_body = await request.json()
-    question = request_body["question"]
-
-    messages = [{"role": "user", "content": question}]
-    result = chat_completion(messages)
-
-    return resp_ok(result)
+# @webapp.post("/chat")
+# async def chat(request: Request, background: BackgroundTasks):
+#     request_body = await request.json()
+#     question = request_body["question"]
+#
+#     messages = [{"role": "user", "content": question}]
+#     result = chat_completion(messages)
+#
+#     return resp_ok(result)
 
 
 if __name__ == '__main__':
