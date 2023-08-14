@@ -1,9 +1,25 @@
 import uvicorn
+import hashlib
 from fastapi import FastAPI, Request, BackgroundTasks
 from _chat import *
 from _resp import *
 
 webapp = FastAPI()
+token = 'joeandjin2017'
+
+
+@webapp.get("/token")
+def token(request: Request):
+    arr = [token, request.query_params["timestamp"], request.query_params["nonce"]]
+    arr.sort()
+
+    tmp = ''.join(arr)
+    enc = hashlib.sha1(tmp.encode("utf-8")).hexdigest()
+
+    if enc == request.query_params["signature"]:
+        return request.query_params["echostr"]
+
+    return None
 
 
 @webapp.post("/chat")
