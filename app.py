@@ -27,7 +27,7 @@ def token(request: Request):
 
 
 @webapp.post("/token")
-async def receive(request: Request):
+async def access(request: Request):
     data = (await request.body()).decode("utf-8")
     msg = receive.parse_xml(data)
 
