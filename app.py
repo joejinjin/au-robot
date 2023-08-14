@@ -35,9 +35,9 @@ async def access(request: Request):
         to_user = msg.FromUserName
         from_user = msg.ToUserName
 
-        print("content => %s" % msg.Content)
+        print("content => %s" % msg.Content.decode("utf-8"))
 
-        messages = [{"role": "user", "content": msg.Content}]
+        messages = [{"role": "user", "content": msg.Content.decode("utf-8")}]
         result = chat_completion(messages)
 
         reply_msg = reply.TextMsg(to_user, from_user, result)
