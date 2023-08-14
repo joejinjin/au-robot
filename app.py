@@ -35,6 +35,8 @@ async def access(request: Request):
         to_user = msg.FromUserName
         from_user = msg.ToUserName
 
+        print("content => %s" % msg.Content)
+
         messages = [{"role": "user", "content": msg.Content}]
         result = chat_completion(messages)
 
