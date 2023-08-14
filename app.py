@@ -4,9 +4,8 @@ from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.responses import PlainTextResponse
 import reply
 import receive
+from _chat import *
 
-# from _chat import *
-# from _resp import *
 
 webapp = FastAPI()
 weixin = 'joeandjin2017'
@@ -35,8 +34,11 @@ async def access(request: Request):
     if isinstance(msg, receive.Msg) and msg.MsgType == 'text':
         to_user = msg.FromUserName
         from_user = msg.ToUserName
-        content = "test"
-        reply_msg = reply.TextMsg(to_user, from_user, content)
+
+        messages = [{"role": "user", "content": msg.Content}]
+        result = chat_completion(messages)
+
+        reply_msg = reply.TextMsg(to_user, from_user, result)
         return reply_msg.send()
 
     return "success"
