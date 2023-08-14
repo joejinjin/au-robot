@@ -57,7 +57,7 @@ def running_question(user: str, content: str):
     user_cache[user] = "0"
     messages = [{"role": "user", "content": content}]
     result = chat_completion(messages)
-    result = result.replace("\n", "<br />")
+    result = result.replace("\n", "\r\n")
     print("result => %s" % result)
     user_cache[user] = result
 
