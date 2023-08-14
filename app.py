@@ -10,7 +10,7 @@ token = 'joeandjin2017'
 
 @webapp.get("/token")
 def token(request: Request):
-    arr = [token, request.query_params["timestamp"], request.query_params["nonce"]]
+    arr = [token, str(request.query_params["timestamp"]), str(request.query_params["nonce"])]
     arr.sort()
 
     tmp = ''.join(arr)
