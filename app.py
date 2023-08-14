@@ -1,6 +1,8 @@
 import uvicorn
 import hashlib
 from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import PlainTextResponse
+
 # from _chat import *
 # from _resp import *
 
@@ -17,9 +19,9 @@ def token(request: Request):
     enc = hashlib.sha1(tmp.encode("utf-8")).hexdigest()
 
     if enc == request.query_params["signature"]:
-        return request.query_params["echostr"]
+        return PlainTextResponse(request.query_params["echostr"])
 
-    return None
+    return PlainTextResponse('')
 
 
 # @webapp.post("/chat")
