@@ -1,6 +1,7 @@
+import os
 import openai
 
-openai.api_key = "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"
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 models = openai.Model.list()
 
