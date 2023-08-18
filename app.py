@@ -2,6 +2,8 @@ import uvicorn
 import hashlib
 from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.responses import PlainTextResponse
+from fastapi.responses import XMLResponse
+
 import reply
 import receive
 from _chat import *
@@ -27,6 +29,8 @@ def token(request: Request):
 
 @webapp.post("/token")
 async def access(request: Request, background: BackgroundTasks):
+    headers = {"Content-Type": "application/xml"}
+
     data = (await request.body()).decode("utf-8")
     print("user => %s" % data)
     msg = receive.parse_xml(data)
@@ -38,15 +42,15 @@ async def access(request: Request, background: BackgroundTasks):
         if msg.FromUserName not in user_cache:
             background.add_task(running_question, msg.FromUserName, msg.Content.decode("utf-8"))
             text_msg = reply.TextMsg(to_user, from_user, "5秒后提醒我回复～")
-            return text_msg.send()
+            return XMLResponse(content=text_msg.send(), headers=headers)
 
         if user_cache[msg.FromUserName] == "0":
             text_msg = reply.TextMsg(to_user, from_user, "再等等不着急～")
-            return text_msg.send()
+            return XMLResponse(content=text_msg.send(), headers=headers)
 
         result = user_cache.pop(msg.FromUserName)
         text_msg = reply.TextMsg(to_user, from_user, result)
-        return text_msg.send()
+        return XMLResponse(content=text_msg.send(), headers=headers)
 
     return "success"
 
