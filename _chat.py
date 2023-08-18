@@ -5,12 +5,15 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 
 models = openai.Model.list()
 
-print("model => %s" % models.data[0].id)
+for model in models.data:
+    print("model => %s" % model.id)
+
+model = 'gpt-3.5-turbo-16k-0613'
 
 
 def chat_completion(messages):
     result = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model=model,
         messages=messages,
     )
 

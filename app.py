@@ -6,7 +6,6 @@ import reply
 import receive
 from _chat import *
 
-
 webapp = FastAPI()
 weixin = 'joeandjin2017'
 user_cache = {}
@@ -36,32 +35,31 @@ async def access(request: Request, background: BackgroundTasks):
         to_user = msg.FromUserName
         from_user = msg.ToUserName
 
-        if msg.FromUserName in user_cache:
-            if user_cache[msg.FromUserName] == "0":
-                reply_msg = reply.TextMsg(to_user, from_user, "再等等，不着急～")
-                return reply_msg.send()
+        if msg.FromUserName not in user_cache:
+            background.add_task(running_question, msg.FromUserName, msg.Content.decode("utf-8"))
+            text_msg = reply.TextMsg(to_user, from_user, "5秒后提醒我回复～")
+            return text_msg.send()
 
-            reply_msg = reply.TextMsg(to_user, from_user, user_cache.pop(msg.FromUserName))
-            return reply_msg.send()
+        if user_cache[msg.FromUserName] == "0":
+            text_msg = reply.TextMsg(to_user, from_user, "再等等不着急～")
+            return text_msg.send()
 
-        print("content => %s" % msg.Content.decode("utf-8"))
-        background.add_task(running_question, msg.FromUserName, msg.Content.decode("utf-8"))
-
-        reply_msg = reply.TextMsg(to_user, from_user, "给我点时间哈，5秒之后提醒我回复～")
-        return reply_msg.send()
+        result = user_cache.pop(msg.FromUserName)
+        text_msg = reply.TextMsg(to_user, from_user, result)
+        return text_msg.send()
 
     return "success"
 
 
 def running_question(user: str, content: str):
     user_cache[user] = "0"
+
     messages = [{"role": "user", "content": content}]
     result = chat_completion(messages)
-    result = result.replace("\n", "\r\n")
     print("result => %s" % result)
+
     user_cache[user] = result
 
 
 if __name__ == '__main__':
-    # uvicorn.run(app=webapp, host="0.0.0.0", port=443, ssl_keyfile="key.pem", ssl_certfile="cert.pem", workers=1)
     uvicorn.run(app=webapp, host="0.0.0.0", port=80, workers=1)
