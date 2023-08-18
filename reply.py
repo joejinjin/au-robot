@@ -18,26 +18,15 @@ class TextMsg(Msg):
         self.__dict['Content'] = content
 
     def send(self):
-        result = self.__dict['Content']
-        result = result.replace('\r\n', '\n')
-        lines = result.split('\n')
-
         XmlForm = """
             <xml>
                 <ToUserName><![CDATA[{ToUserName}]]></ToUserName>
                 <FromUserName><![CDATA[{FromUserName}]]></FromUserName>
                 <CreateTime>{CreateTime}</CreateTime>
                 <MsgType><![CDATA[text]]></MsgType>
-                <Content><![CDATA["""
-
-        for index, line in enumerate(lines):
-            XmlForm += """""" + line + """
-            """
-
-        XmlForm += """]]></Content>
+                <Content><![CDATA[{Content}]]></Content>
             </xml>
             """
-
         return XmlForm.format(**self.__dict)
 
 
