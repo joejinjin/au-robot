@@ -31,7 +31,8 @@ class TextMsg(Msg):
                 <Content><![CDATA["""
 
         for index, line in enumerate(lines):
-            XmlForm += line + '\n'
+            XmlForm += """""" + line + """
+            """
 
         XmlForm += """]]></Content>
             </xml>
