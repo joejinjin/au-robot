@@ -2,6 +2,7 @@ import uvicorn
 import hashlib
 from fastapi import FastAPI, Request, BackgroundTasks, Response
 from fastapi.responses import PlainTextResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 import reply
 import receive
@@ -11,6 +12,14 @@ from resp import *
 webapp = FastAPI()
 weixin = 'joeandjin2017'
 user_cache = {}
+
+webapp.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @webapp.get("/token")
