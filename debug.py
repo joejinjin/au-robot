@@ -1,3 +1,3 @@
-from _chat import *
+from chat import *
 
 chat_completion("hello")

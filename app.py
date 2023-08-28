@@ -5,7 +5,8 @@ from fastapi.responses import PlainTextResponse
 
 import reply
 import receive
-from _chat import *
+from chat import *
+from resp import *
 
 webapp = FastAPI()
 weixin = 'joeandjin2017'
@@ -64,5 +65,23 @@ def running_question(user: str, content: str):
     user_cache[user] = result
 
 
+@webapp.post("/chat")
+async def chat(request: Request):
+    form = await request.json()
+
+    system = form["system"]
+    if not system: return resp_err('not good')
+    user = form["user"]
+    if not user: return resp_err('not good at all')
+
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+
+    result = chat_completion(messages)
+    return resp_ok(result)
+
+
 if __name__ == '__main__':
-    uvicorn.run(app=webapp, host="0.0.0.0", port=80, workers=1)
+    uvicorn.run(app=webapp, host="0.0.0.0", port=8080, workers=1)
