@@ -8,11 +8,12 @@ models = openai.Model.list()
 for model in models.data:
     print("model => %s" % model.id)
 
-model = 'gpt-3.5-turbo-16k-0613'
+model = 'gpt-3.5-turbo'
 
 
 def chat_completion(messages):
     result = openai.ChatCompletion.create(
+        temperature=0,
         model=model,
         messages=messages,
     )
